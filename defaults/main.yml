@@ -1,0 +1,36 @@
+---
+APP_NAME: love
+APP_DEPENDENCIES:
+  - git
+  - freetype-devel
+  - glibc-devel
+  - libmpg123-devel
+  - libmodplug-devel
+  - physfs-devel
+  - mesa-libGL-devel
+  - openal-soft-devel
+    #  - DevIL-devel
+  - libvorbis-devel
+  - SDL-devel
+  - libmng-devel
+  - libtiff-devel
+  - lua-devel
+  - gcc-c++
+  - libtool
+  - luajit
+  - luajit-devel
+  - libtheora-devel
+  - SDL2-devel
+  - autoconf
+APP_USER: "{{ lookup('env', 'USER') }}"
+APP_GROUP: "{{ APP_USER }}"
+APP_OPT: "/opt/{{ APP_NAME  }}"
+APP_SRC: "/usr/local/src/{{ APP_NAME  }}"
+
+##################
+# Nico's Program #
+##################
+
+APP_REPO: git@github.com:love2d/love.git
+APP_TAG: 0.10.2
+

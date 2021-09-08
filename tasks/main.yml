@@ -1,0 +1,63 @@
+---
+- name: "install Development Tools dependency"
+  package:
+    name: "@Development Tools"
+    state: present
+  become: true
+- name: "install epel-release dependency"
+  package:
+    name: epel-release
+    state: present
+  become: true
+- name: "install Power Tools dependency"
+  package:
+    name: dnf-plugins-core
+    state: present
+  become: true
+- name: "install {{ APP_NAME }} dependencies"
+  package:
+    name: "{{ APP_DEPENDENCIES }}"
+    state: present
+  become: true
+- name: Create the directory {{ APP_SRC }}
+  file:
+    name: "{{ APP_SRC }}"
+    state: directory
+    owner: "{{ APP_USER }}"
+    group: "{{ APP_GROUP }}"
+  become: yes
+- name: Create the directory {{ APP_OPT }}
+  file:
+    name: "{{ APP_OPT }}"
+    state: directory
+    owner: "{{ APP_USER }}"
+    group: "{{ APP_GROUP }}"
+  become: yes
+- name: Check for the {{ APP_NAME }} README file
+  stat:
+    path: "{{ APP_SRC }}/readme.md"
+  register: APP_README_PATH
+- name: Clone the {{ APP_REPO }} source code into {{ APP_SRC }}
+  git:
+    repo: "{{ APP_REPO }}"
+    dest: "{{ APP_SRC }}"
+    version: "{{ APP_TAG }}"
+  when: not APP_README_PATH.stat.exists
+- name: Run {{ SOLR_NAME }} platform/unix/automagic
+  shell: platform/unix/automagic
+  args:
+    chdir: "{{ APP_SRC }}"
+- name: Run {{ SOLR_NAME }} ./configure
+  shell: ./configure
+  args:
+    chdir: "{{ APP_SRC }}"
+- name: Run {{ SOLR_NAME }} make
+  shell: make
+  args:
+    chdir: "{{ APP_SRC }}"
+- name: Run {{ SOLR_NAME }} make install
+  shell: make install
+  args:
+    chdir: "{{ APP_SRC }}"
+  become: true
+
