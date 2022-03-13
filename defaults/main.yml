@@ -5,8 +5,8 @@ APP_DEPENDENCIES_REDHAT:
   - freetype-devel
   - glibc-devel
   - libmpg123-devel
-  - libmodplug-devel
-  - physfs-devel
+  #- libmodplug-devel
+  #- physfs-devel
   - mesa-libGL-devel
   - openal-soft-devel
     #  - DevIL-devel
@@ -17,11 +17,12 @@ APP_DEPENDENCIES_REDHAT:
   - lua-devel
   - gcc-c++
   - libtool
-  - luajit
-  - luajit-devel
+  #- luajit
+  #- luajit-devel
   - libtheora-devel
   - SDL2-devel
   - autoconf
+  - freetype-devel
 APP_DEPENDENCIES: "{{ APP_DEPENDENCIES_REDHAT if ansible_distribution_file_variety == 'RedHat' else APP_DEPENDENCIES_REDHAT }}"
 APP_NAME: love
 APP_USER: "{{ lookup('env', 'USER') }}"
