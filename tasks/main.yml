@@ -41,19 +41,19 @@
     dest: "{{ APP_SRC }}"
     version: "{{ APP_TAG }}"
   when: not APP_README_PATH.stat.exists and CLONE_REPO.failed
-- name: Run {{ SOLR_NAME }} platform/unix/automagic
+- name: Run platform/unix/automagic
   shell: platform/unix/automagic
   args:
     chdir: "{{ APP_SRC }}"
-- name: Run {{ SOLR_NAME }} ./configure
+- name: Run ./configure
   shell: ./configure
   args:
     chdir: "{{ APP_SRC }}"
-- name: Run {{ SOLR_NAME }} make
+- name: Run make
   shell: make
   args:
     chdir: "{{ APP_SRC }}"
-- name: Run {{ SOLR_NAME }} make install
+- name: Run make install
   shell: make install
   args:
     chdir: "{{ APP_SRC }}"
