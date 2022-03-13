@@ -1,48 +1,46 @@
 ---
-- name: "install Development Tools dependency"
-  package:
-    name: "@Development Tools"
-    state: present
-  become: true
-- name: "install epel-release dependency"
-  package:
-    name: epel-release
-    state: present
-  become: true
-- name: "install Power Tools dependency"
-  package:
-    name: dnf-plugins-core
-    state: present
-  become: true
-- name: "install {{ APP_NAME }} dependencies"
+- include_role:
+    name: computate.computate_powertools
+- name: "Install dependencies as root: {{ APP_DEPENDENCIES | join(' ') }}"
   package:
     name: "{{ APP_DEPENDENCIES }}"
-    state: present
   become: true
+  register: INSTALL_DEPENDENCIES
+  ignore_errors: true
+- name: "Install dependencies as user {{ APP_USER }}: {{ APP_DEPENDENCIES | join(' ') }}"
+  shell: "pkcon install -y {{ item }} | true"
+  loop: "{{ APP_DEPENDENCIES }}"
+  when: INSTALL_DEPENDENCIES.failed
 - name: Create the directory {{ APP_SRC }}
   file:
     name: "{{ APP_SRC }}"
     state: directory
     owner: "{{ APP_USER }}"
-    group: "{{ APP_GROUP }}"
-  become: yes
+  become: true
 - name: Create the directory {{ APP_OPT }}
   file:
     name: "{{ APP_OPT }}"
     state: directory
     owner: "{{ APP_USER }}"
-    group: "{{ APP_GROUP }}"
-  become: yes
+  become: true
 - name: Check for the {{ APP_NAME }} README file
   stat:
     path: "{{ APP_SRC }}/readme.md"
   register: APP_README_PATH
-- name: Clone the {{ APP_REPO }} source code into {{ APP_SRC }}
-  git:
-    repo: "{{ APP_REPO }}"
+- name: "Clone the {{ APP_REPO_SSH }} source code into {{ APP_SRC }}"
+  ansible.builtin.git:
+    repo: "{{ APP_REPO_SSH }}"
     dest: "{{ APP_SRC }}"
     version: "{{ APP_TAG }}"
+  ignore_errors: true
   when: not APP_README_PATH.stat.exists
+  register: CLONE_REPO
+- name: "Clone the {{ APP_REPO_HTTPS }} source code into {{ APP_SRC }}"
+  ansible.builtin.git:
+    repo: "{{ APP_REPO_HTTPS }}"
+    dest: "{{ APP_SRC }}"
+    version: "{{ APP_TAG }}"
+  when: not APP_README_PATH.stat.exists and CLONE_REPO.failed
 - name: Run {{ SOLR_NAME }} platform/unix/automagic
   shell: platform/unix/automagic
   args:

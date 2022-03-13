@@ -1,6 +1,6 @@
 ---
-APP_NAME: love
-APP_DEPENDENCIES:
+APP_PYTHON: "{{ '/usr/bin/python' if lookup('file', '/usr/bin/python', errors='ignore') else '/usr/bin/python3' }}"
+APP_DEPENDENCIES_REDHAT:
   - git
   - freetype-devel
   - glibc-devel
@@ -22,15 +22,13 @@ APP_DEPENDENCIES:
   - libtheora-devel
   - SDL2-devel
   - autoconf
+APP_DEPENDENCIES: "{{ APP_DEPENDENCIES_REDHAT if ansible_distribution_file_variety == 'RedHat' else APP_DEPENDENCIES_REDHAT }}"
+APP_NAME: love
 APP_USER: "{{ lookup('env', 'USER') }}"
-APP_GROUP: "{{ APP_USER }}"
-APP_OPT: "/opt/{{ APP_NAME  }}"
-APP_SRC: "/usr/local/src/{{ APP_NAME  }}"
-
-##################
-# Nico's Program #
-##################
-
-APP_REPO: git@github.com:love2d/love.git
+APP_PREFIX: "/home/{{ APP_USER }}/.local"
+APP_SRC: "{{ APP_PREFIX }}/src/stk-code"
+APP_OPT: "{{ APP_PREFIX }}/opt"
+APP_REPO_SSH: git@github.com:love2d/love.git
+APP_REPO_HTTPS: "{{ APP_REPO_SSH | replace('git@github.com:', 'https://github.com/') }}"
 APP_TAG: 0.10.2
 
