@@ -26,7 +26,7 @@ APP_DEPENDENCIES: "{{ APP_DEPENDENCIES_REDHAT if ansible_distribution_file_varie
 APP_NAME: love
 APP_USER: "{{ lookup('env', 'USER') }}"
 APP_PREFIX: "/home/{{ APP_USER }}/.local"
-APP_SRC: "{{ APP_PREFIX }}/src/stk-code"
+APP_SRC: "{{ APP_PREFIX }}/src/love"
 APP_OPT: "{{ APP_PREFIX }}/opt"
 APP_REPO_SSH: git@github.com:love2d/love.git
 APP_REPO_HTTPS: "{{ APP_REPO_SSH | replace('git@github.com:', 'https://github.com/') }}"
