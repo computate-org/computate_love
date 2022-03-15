@@ -43,8 +43,8 @@
   shell: autoreconf -vi
   args:
     chdir: "{{ APP_SRC }}"
-- name: Run ./configure --prefix={{ APP_PREFIX }}
-  shell: ./configure --prefix={{ APP_PREFIX }}
+- name: Run (export PKG_CONFIG_PATH={{ APP_PREFIX }}/lib/pkgconfig && ./configure --prefix={{ APP_PREFIX }})
+  shell: (export PKG_CONFIG_PATH={{ APP_PREFIX }}/lib/pkgconfig && ./configure --prefix={{ APP_PREFIX }})
   args:
     chdir: "{{ APP_SRC }}"
 - name: Run make
