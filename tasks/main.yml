@@ -16,13 +16,7 @@
     name: "{{ APP_SRC }}"
     state: directory
     owner: "{{ APP_USER }}"
-  become: true
-- name: Create the directory {{ APP_OPT }}
-  file:
-    name: "{{ APP_OPT }}"
-    state: directory
-    owner: "{{ APP_USER }}"
-  become: true
+  become: "{{ APP_ROOT }}"
 - name: Check for the {{ APP_NAME }} README file
   stat:
     path: "{{ APP_SRC }}/readme.md"
@@ -41,12 +35,16 @@
     dest: "{{ APP_SRC }}"
     version: "{{ APP_TAG }}"
   when: not APP_README_PATH.stat.exists and CLONE_REPO.failed
-- name: Run platform/unix/automagic
-  shell: platform/unix/automagic
+#- name: Run platform/unix/automagic
+#  shell: platform/unix/automagic
+#  args:
+#    chdir: "{{ APP_SRC }}"
+- name: Run autoreconf -vi
+  shell: autoreconf -vi
   args:
     chdir: "{{ APP_SRC }}"
-- name: Run ./configure
-  shell: ./configure
+- name: Run ./configure --prefix={{ APP_PREFIX }}
+  shell: ./configure --prefix={{ APP_PREFIX }}
   args:
     chdir: "{{ APP_SRC }}"
 - name: Run make
@@ -57,5 +55,5 @@
   shell: make install
   args:
     chdir: "{{ APP_SRC }}"
-  become: true
+  become: "{{ APP_ROOT }}"
 
