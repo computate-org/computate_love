@@ -39,8 +39,12 @@
     dest: "{{ APP_SRC }}"
     version: "{{ APP_TAG }}"
   when: not APP_README_PATH.stat.exists and CLONE_REPO.failed
-- name: Run platform/unix/automagic
-  shell: platform/unix/automagic
+#- name: Run platform/unix/automagic
+#  shell: platform/unix/automagic
+#  args:
+#    chdir: "{{ APP_SRC }}"
+- name: Run autoreconf -vi
+  shell: autoreconf -vi
   args:
     chdir: "{{ APP_SRC }}"
 - name: Run (export PKG_CONFIG_PATH={{ APP_PREFIX }}/lib/pkgconfig && ./configure --prefix={{ APP_PREFIX }})
