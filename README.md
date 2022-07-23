@@ -1,4 +1,9 @@
 
+# Install the prerequisite applications, powertools and libmodplug
+
+- https://github.com/computate-org/computate_powertools
+- https://github.com/computate-org/computate_libmodplug
+
 # Install the love ansible role
 
 ```bash
