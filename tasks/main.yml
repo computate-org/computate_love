@@ -39,24 +39,25 @@
     dest: "{{ APP_SRC }}"
     version: "{{ APP_TAG }}"
   when: not APP_README_PATH.stat.exists and CLONE_REPO.failed
-#- name: Run platform/unix/automagic
-#  shell: platform/unix/automagic
-#  args:
-#    chdir: "{{ APP_SRC }}"
+- name: Run platform/unix/automagic -d
+  shell: platform/unix/automagic -d
+  args:
+    chdir: "{{ APP_SRC }}"
 - name: Run autoreconf -vi
   shell: autoreconf -vi
   args:
     chdir: "{{ APP_SRC }}"
-- name: Run (export PKG_CONFIG_PATH={{ APP_PREFIX }}/lib/pkgconfig && ./configure --prefix={{ APP_PREFIX }})
-  shell: (export PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig && export LDFLAGS="-L {{ APP_PREFIX }}/lib -L {{ APP_PREFIX }}" && ./configure --prefix={{ APP_PREFIX }})
+- name: "Run env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L {{ APP_PREFIX }}/lib -L {{ APP_PREFIX }}' ./configure --prefix={{ APP_PREFIX }}"
+  shell: "env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L{{ APP_PREFIX }}/lib -L{{ APP_PREFIX }}' ./configure --prefix={{ APP_PREFIX }}"
   args:
     chdir: "{{ APP_SRC }}"
-- name: Run make
-  shell: make
+- name: "Run env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L{{ APP_PREFIX }}/lib -L{{ APP_PREFIX }}' make -j $(nproc)"
+  shell: "env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L{{ APP_PREFIX }}/lib -L{{ APP_PREFIX }}' make -j $(nproc)"
+  shell: make -j $(nproc)
   args:
     chdir: "{{ APP_SRC }}"
-- name: Run make install
-  shell: make install
+- name: "Run env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L{{ APP_PREFIX }}/lib -L{{ APP_PREFIX }}' make install -j $(nproc)"
+  shell: "env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L{{ APP_PREFIX }}/lib -L{{ APP_PREFIX }}' make install -j $(nproc)"
   args:
     chdir: "{{ APP_SRC }}"
   become: "{{ APP_ROOT }}"

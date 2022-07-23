@@ -4,9 +4,9 @@ APP_DEPENDENCIES_REDHAT:
   - git
   - freetype-devel
   - glibc-devel
-  - libmpg123-devel
-  #- libmodplug-devel
-  #- physfs-devel
+  - mpg123-devel
+  - libmodplug-devel
+  - physfs-devel
   - mesa-libGL-devel
   - openal-soft-devel
     #  - DevIL-devel
@@ -17,8 +17,8 @@ APP_DEPENDENCIES_REDHAT:
   - lua-devel
   - gcc-c++
   - libtool
-  #- luajit
-  #- luajit-devel
+  - luajit
+  - luajit-devel
   - libtheora-devel
   - SDL2-devel
   - autoconf
@@ -32,5 +32,5 @@ APP_SRC: "{{ APP_PREFIX }}/src/{{ APP_NAME }}"
 APP_OPT: "{{ APP_PREFIX }}/opt"
 APP_REPO_SSH: git@github.com:love2d/love.git
 APP_REPO_HTTPS: "{{ APP_REPO_SSH | replace('git@github.com:', 'https://github.com/') }}"
-APP_TAG: 0.10.2
+APP_TAG: 11.4
 
