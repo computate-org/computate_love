@@ -7,8 +7,6 @@
     name: computate.computate_physfs
 - include_role:
     name: computate.computate_luajit
-- include_role:
-    name: computate.computate_physfs
 - name: "Install dependencies as root: {{ APP_DEPENDENCIES | join(' ') }}"
   package:
     name: "{{ APP_DEPENDENCIES }}"
