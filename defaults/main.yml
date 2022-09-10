@@ -5,6 +5,7 @@ APP_DEPENDENCIES_REDHAT:
   - freetype-devel
   - glibc-devel
   - mpg123-devel
+  - physfs-devel
   - mesa-libGL-devel
   - openal-soft-devel
     #  - DevIL-devel
