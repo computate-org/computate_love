@@ -1,12 +1,4 @@
 ---
-- include_role:
-    name: computate.computate_powertools
-- include_role:
-    name: computate.computate_libmodplug
-- include_role:
-    name: computate.computate_physfs
-- include_role:
-    name: computate.computate_luajit
 - name: "Install dependencies as root: {{ APP_DEPENDENCIES | join(' ') }}"
   package:
     name: "{{ APP_DEPENDENCIES }}"
