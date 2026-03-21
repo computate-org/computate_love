@@ -22,7 +22,6 @@ cd ~/.ansible/roles/computate.computate_love
 # Run the love ansible playbook to install love locally. 
 
 ```bash
-ansible-playbook install.yml
+ansible-playbook install.yml -K
 ```
 
-Christopher Tate
