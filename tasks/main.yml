@@ -14,6 +14,7 @@
   stat:
     path: "{{ APP_SRC }}/readme.md"
   register: APP_README_PATH
+  become: "{{ APP_ROOT }}"
 - name: "Clone the {{ APP_REPO_SSH }} source code into {{ APP_SRC }}"
   ansible.builtin.git:
     repo: "{{ APP_REPO_SSH }}"
@@ -22,29 +23,35 @@
   ignore_errors: true
   when: not APP_README_PATH.stat.exists
   register: CLONE_REPO
+  become: "{{ APP_ROOT }}"
 - name: "Clone the {{ APP_REPO_HTTPS }} source code into {{ APP_SRC }}"
   ansible.builtin.git:
     repo: "{{ APP_REPO_HTTPS }}"
     dest: "{{ APP_SRC }}"
     version: "{{ APP_TAG }}"
   when: not APP_README_PATH.stat.exists and CLONE_REPO.failed
+  become: "{{ APP_ROOT }}"
 - name: Run platform/unix/automagic -d
   shell: platform/unix/automagic -d
   args:
     chdir: "{{ APP_SRC }}"
+  become: "{{ APP_ROOT }}"
 - name: Run autoreconf -vi
   shell: autoreconf -vi
   args:
     chdir: "{{ APP_SRC }}"
+  become: "{{ APP_ROOT }}"
 - name: "Run env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L {{ APP_PREFIX }}/lib -L {{ APP_PREFIX }}' ./configure --prefix={{ APP_PREFIX }}"
   shell: "env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L{{ APP_PREFIX }}/lib -L{{ APP_PREFIX }}' ./configure --prefix={{ APP_PREFIX }}"
   args:
     chdir: "{{ APP_SRC }}"
+  become: "{{ APP_ROOT }}"
 - name: "Run env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L{{ APP_PREFIX }}/lib -L{{ APP_PREFIX }}' make -j $(nproc)"
   shell: "env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L{{ APP_PREFIX }}/lib -L{{ APP_PREFIX }}' make -j $(nproc)"
   shell: make -j $(nproc)
   args:
     chdir: "{{ APP_SRC }}"
+  become: "{{ APP_ROOT }}"
 - name: "Run env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L{{ APP_PREFIX }}/lib -L{{ APP_PREFIX }}' make install -j $(nproc)"
   shell: "env PKG_CONFIG_PATH={{ APP_PREFIX }}/lib64/pkgconfig:{{ APP_PREFIX }}/lib/pkgconfig LDFLAGS='-L{{ APP_PREFIX }}/lib -L{{ APP_PREFIX }}' make install -j $(nproc)"
   args:
